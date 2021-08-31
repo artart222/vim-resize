@@ -1,10 +1,3 @@
-" resize.vim    resizing the screen
-" Author:       Breuckelen (Benjamin Attal)
-" Version:      1.0
-
-" Globals
-let g:resize_count = 1
-
 "Is<direction>Most Boolean Functions
 function! IsRightMost()
     let oldw = winnr()
@@ -38,18 +31,8 @@ function! IsLeftMost()
     return oldw == neww
 endfunction
 
-"Resize<direction> functions and helpers
-function! CacheResizeCount(n)
-    if a:n
-        return a:n
-    else
-        return g:resize_count
-    endif
-    echo ""
-endfunction
-
-function! s:ResizeUp(n)
-    let g:resize_count = CacheResizeCount(a:n)
+function ResizeUp(n)
+    let g:resize_count = a:n
     if IsBottomMost()
         if IsTopMost()
             silent! exec "normal! " . g:resize_count . "\<c-w>-"
@@ -62,8 +45,8 @@ function! s:ResizeUp(n)
     echo ""
 endfunction
 
-function! s:ResizeDown(n)
-    let g:resize_count = CacheResizeCount(a:n)
+function ResizeDown(n)
+    let g:resize_count = a:n
     if IsBottomMost()
         if IsTopMost()
             silent! exec "normal! " . g:resize_count . "\<c-w>+"
@@ -76,8 +59,8 @@ function! s:ResizeDown(n)
     echo ""
 endfunction
 
-function! s:ResizeLeft(n)
-    let g:resize_count = CacheResizeCount(a:n)
+function ResizeLeft(n)
+    let g:resize_count = a:n
     if IsRightMost()
         if !IsLeftMost()
             silent! exec "normal! " . g:resize_count . "\<c-w>>"
@@ -88,8 +71,8 @@ function! s:ResizeLeft(n)
     echo ""
 endfunction
 
-function! s:ResizeRight(n)
-    let g:resize_count = CacheResizeCount(a:n)
+function ResizeRight(n)
+    let g:resize_count = a:n
     if IsRightMost()
         if !IsLeftMost()
             silent! exec "normal! " . g:resize_count . "\<c-w><"
@@ -99,15 +82,3 @@ function! s:ResizeRight(n)
     endif
     echo ""
 endfunction
-
-command! CmdResizeLeft call <SID>ResizeLeft(v:count)
-command! CmdResizeDown call <SID>ResizeDown(v:count)
-command! CmdResizeUp call <SID>ResizeUp(v:count)
-command! CmdResizeRight call <SID>ResizeRight(v:count)
-
-if get(g:, 'vim_resize_disable_auto_mappings') == 0
-    nnoremap <silent> <c-left> :CmdResizeLeft<cr>
-    nnoremap <silent> <c-down> :CmdResizeDown<cr>
-    nnoremap <silent> <c-up> :CmdResizeUp<cr>
-    nnoremap <silent> <c-right> :CmdResizeRight<cr>
-endif
